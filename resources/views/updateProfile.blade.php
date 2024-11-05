@@ -1,10 +1,12 @@
+<!-- resources/views/user/updateProfile.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Update Profile</title>
     <style>
+        /* Basic styling */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -29,7 +31,8 @@
             color: #555;
         }
         input[type="text"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="file"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -49,30 +52,33 @@
         .submit-button:hover {
             background-color: #0056b3;
         }
-        .success-message,
-        .error-message {
+        .message {
             margin: 10px 0;
             text-align: center;
+            padding: 10px;
+            border-radius: 5px;
         }
         .success-message {
-            color: green;
+            background-color: #d4edda;
+            color: #155724;
         }
         .error-message {
-            color: red;
+            background-color: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>User Profile</h1>
+    <h1>Update Profile</h1>
 
     @if(session('success'))
-        <div class="success-message">{{ session('success') }}</div>
+        <div class="message success-message">{{ session('success') }}</div>
     @endif
 
     @if($errors->any())
-        <div class="error-message">
+        <div class="message error-message">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -81,13 +87,21 @@
         </div>
     @endif
 
-    <form action="{{ route('profile.update') }}" method="POST">
+    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
+
         <label for="name">Name</label>
         <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required>
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password">
+
+        <label for="password_confirmation">Confirm Password</label>
+        <input type="password" id="password_confirmation" name="password_confirmation">
+
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
 
         <button type="submit" class="submit-button">Update Profile</button>
     </form>
